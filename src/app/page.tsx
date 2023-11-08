@@ -1,95 +1,88 @@
-import Image from 'next/image'
+/* eslint-disable @stylistic/multiline-ternary */
+'use client'
+
+import { useRef, useState } from 'react'
+import { Button, Stack } from '@mui/material'
+import JSZip from 'jszip'
+import { saveAs } from 'file-saver'
 import styles from './page.module.css'
+import Mask from '@/components/ui/Mask'
+import { buffer2Base64 } from '@/lib'
+
+interface WebpFile {
+  buf: Buffer
+  name: string
+}
 
 export default function Home() {
+  const iptRef = useRef<HTMLInputElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+  const [webpFile, setWebpFile] = useState<WebpFile[]>([])
+  async function download() {
+    const zip = new JSZip()
+    webpFile.forEach(({ buf, name }, i) => {
+      zip.file(`${name}.webp`, buffer2Base64(buf), { base64: true })
+    })
+    zip.generateAsync({ type: 'blob' }).then((content) => {
+      saveAs(content, 'example.zip')
+    })
+  }
+
+  async function showImg() {
+    const files = iptRef.current?.files
+    if (!files) {
+      return
+    }
+    const newimgs: WebpFile[] = []
+    for (const file of Array.from(files)) {
+      const rawJSON = await fetch('/api/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        body: await file.arrayBuffer(),
+      })
+      const { buf } = await rawJSON.json()
+      console.log({ size: file.size, buf })
+      newimgs.push({ buf: buf.data, name: file.name })
+    }
+    setWebpFile(newimgs)
+  }
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
+      {/* {imgInstance.length > 0 ? (
         <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+          <img
+            alt="upload img"
+            height={500}
+            ref={imgRef}
+            src={buffer2Base64(imgInstance[0])}
+          />
+          <div>size: {imgInstance[0]?.buffer?.byteLength}</div>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+      ) : (
+        <Mask />
+      )} */}
+      <Stack direction="row" spacing={2}>
+        <Button onClick={() => iptRef.current?.click()} variant="contained">
+          选择文件
+        </Button>
+        <input
+          accept="image/*"
+          hidden
+          multiple
+          onChange={showImg}
+          ref={iptRef}
+          type="file"
         />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Button
+          disabled={webpFile.length <= 0}
+          onClick={() => download()}
+          variant="outlined"
         >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+          点击下载
+        </Button>
+      </Stack>
     </main>
   )
 }

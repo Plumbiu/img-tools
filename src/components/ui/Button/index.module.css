@@ -1,0 +1,25 @@
+.button {
+  cursor: pointer;
+  border: none;
+  color: #fff;
+  background-color: #197cef;
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-shadow: 1px 1px 3px -1px rgba(0, 0, 0, 0.75);
+  transition: opacity 200ms, box-shadow 150ms;
+}
+
+.button:hover {
+  opacity: 0.85;
+  box-shadow: 1px 1px 2px -1px rgba(0, 0, 0, 0.75);
+}
+
+.button:active {
+  opacity: 0.5;
+}
+
+.button:disabled {
+  opacity: 0.85;
+  cursor: not-allowed;
+  background-color: #655966;
+}
