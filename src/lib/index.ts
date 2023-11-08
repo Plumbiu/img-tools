@@ -6,3 +6,63 @@ export function buffer2Base64(buffer: Buffer) {
   }
   return window.btoa(binary)
 }
+
+export function arrayBuffer2Base64(arrayBuffer: ArrayBuffer) {
+  return window.btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
+}
+
+export async function getData(arrBuf: ArrayBuffer, quality = 75) {
+  const rawJSON = await fetch(`/api?quality=${quality}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: arrBuf,
+  })
+  const { buffer, size } = await rawJSON.json()
+
+  return {
+    zipedBuffer: buffer.data,
+    zipedSize: size,
+  }
+}
+
+export function removeSuffix(name: string) {
+  return name.slice(0, name.lastIndexOf('.'))
+}
+
+export function buffer2Base64Url(buffer: Buffer) {
+  return 'data:image/png;base64,' + buffer2Base64(buffer)
+}
+
+function openWin(originHTML: string, zipedHTML: string) {
+  const win = window.open('', '_blank')
+  const html = `
+<div style="display: flex; gap: 32px;">
+  <div>
+    <h1>压缩前</h1>
+    ${originHTML}
+  </div>
+  <div>
+    <h1>压缩后</h1>
+    ${zipedHTML}
+  </div>
+</div>  
+`
+  if (win) {
+    win.document.write(html)
+    win.document.title = '压缩预览'
+    win.document.close()
+  }
+}
+
+export function openImgPreivew(base64Url: [string, string] | undefined) {
+  if (base64Url === undefined) {
+    return
+  }
+  const originImg = new Image()
+  const zipedImg = new Image()
+  originImg.src = base64Url[0]
+  zipedImg.src = base64Url[0]
+  openWin(originImg.outerHTML, zipedImg.outerHTML)
+}

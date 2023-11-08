@@ -1,5 +1,5 @@
 {
-  "name": "img-tools",
+  "name": "img2webp",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.17",
-    "@plumbiu/eslint-config": "^0.1.5",
+    "@mui/x-data-grid": "^6.18.0",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
     "next": "14.0.1",
@@ -21,12 +21,12 @@
     "sharp": "^0.32.6"
   },
   "devDependencies": {
+    "@plumbiu/eslint-config": "^0.1.7",
     "@types/file-saver": "^2.0.7",
     "@types/node": "^20.8.10",
     "@types/react": "^18.2.36",
     "@types/react-dom": "^18.2.14",
     "eslint": "^8.53.0",
-    "eslint-config-next": "14.0.1",
     "typescript": "^5.2.2"
   }
 }
