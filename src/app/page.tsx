@@ -1,4 +1,3 @@
-/* eslint-disable @stylistic/multiline-ternary */
 'use client'
 
 import { useRef, useState } from 'react'
@@ -14,6 +13,7 @@ import {
   removeSuffix,
 } from '@/lib'
 import Dialog from '@/components/Dialog'
+import { GithubIcon } from '@/components/icons'
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: '序号', width: 180 },
@@ -32,6 +32,8 @@ const columns: GridColDef[] = [
     headerName: '压缩大小',
     type: 'number',
     width: 360,
+    headerAlign: 'left',
+    align: 'left',
   },
   {
     field: 'rate',
@@ -44,7 +46,17 @@ const zip = new JSZip()
 
 export default function Home() {
   const iptRef = useRef<HTMLInputElement>(null)
-  const [webpFile, setWebpFile] = useState<WebpFile[]>([])
+  const [webpFile, setWebpFile] = useState<WebpFile[]>([
+    {
+      id: 1,
+      name: '传入图片的名字',
+      buffer: Buffer.from('0011'),
+      zipedBuffer: Buffer.from('01'),
+      size: '800kb = 初始大小',
+      zipedSize: '400kb = 压缩为 webp 格式的图片大小',
+      rate: '50% = 压缩大小/原始大小',
+    },
+  ])
   const [toastOpen, setToastOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedValue, setSelectedValue] = useState<[string, string]>()
@@ -80,7 +92,7 @@ export default function Home() {
         zipedBuffer,
         size: size + 'kb',
         zipedSize: zipedSize + 'kb',
-        rate: (zipedSize / size * 100).toFixed(2) + '%',
+        rate: ((zipedSize / size) * 100).toFixed(2) + '%',
       })
       zip.file(`${name}.webp`, buffer2Base64(zipedBuffer), { base64: true })
     }
@@ -101,85 +113,100 @@ export default function Home() {
     setDialogOpen(true)
   }
   return (
-    <main>
-      <DataGrid
-        columns={columns}
-        disableColumnSelector
-        disableRowSelectionOnClick
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10,
+    <div>
+      <header>
+        <Button
+          component="a"
+          href="https://github.plumbiu.top"
+          startIcon={<GithubIcon />}
+          target="_blank"
+        >
+          API 使用
+        </Button>
+      </header>
+      <main>
+        <DataGrid
+          columns={columns}
+          disableColumnSelector
+          disableRowSelectionOnClick
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 10,
+              },
             },
-          },
-        }}
-        onRowClick={handleRowClick}
-        rows={webpFile}
-      />
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{
-          mt: 2,
-        }}
-      >
-        <Button onClick={() => iptRef.current?.click()} variant="contained">
-          选择文件
-        </Button>
-        <input
-          accept="image/*"
-          hidden
-          multiple
-          onChange={showImg}
-          ref={iptRef}
-          type="file"
+          }}
+          onRowClick={handleRowClick}
+          rows={webpFile}
+          sx={{
+            my: 2,
+          }}
         />
-        <Button
-          disabled={webpFile.length <= 0}
-          onClick={() => download()}
-          variant="outlined"
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{
+            mt: 1,
+          }}
         >
-          点击下载
-        </Button>
-      </Stack>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        autoHideDuration={6000}
-        open={toastOpen}
-      >
-        <Alert severity="success" sx={{ width: '100%' }} variant="filled">
-          压缩成功
-        </Alert>
-      </Snackbar>
-      <Dialog
-        onClose={handleClose}
-        open={dialogOpen}
-        title="压缩前后对比(左边为原始图片)"
-      >
-        <Stack direction="row" spacing={2}>
-          <img
-            alt="ziped img"
-            className="preview-img"
-            height="400"
-            src={selectedValue?.[1]}
+          <Button onClick={() => iptRef.current?.click()} variant="contained">
+            选择文件
+          </Button>
+          <input
+            accept="image/*"
+            hidden
+            multiple
+            onChange={showImg}
+            ref={iptRef}
+            type="file"
           />
-          <img
-            alt="origin img"
-            className="preview-img"
-            height="400"
-            src={selectedValue?.[0]}
-          />
+          <Button
+            disabled={webpFile.length <= 0}
+            onClick={() => download()}
+            variant="outlined"
+          >
+            点击下载
+          </Button>
         </Stack>
-        <Button
-          onClick={() => openImgPreivew(selectedValue)}
-          variant="contained"
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          autoHideDuration={6000}
+          open={toastOpen}
         >
-          查看网页效果
-        </Button>
-      </Dialog>
-    </main>
+          <Alert severity="success" sx={{ width: '100%' }} variant="filled">
+            压缩成功
+          </Alert>
+        </Snackbar>
+        <Dialog
+          onClose={handleClose}
+          open={dialogOpen}
+          title="压缩前后对比(左边为原始图片)"
+        >
+          <Stack direction="row" spacing={2}>
+            <img
+              alt="ziped img"
+              className="preview-img"
+              height="400"
+              src={selectedValue?.[1]}
+            />
+            <img
+              alt="origin img"
+              className="preview-img"
+              height="400"
+              src={selectedValue?.[0]}
+            />
+          </Stack>
+          <Button
+            onClick={() => openImgPreivew(selectedValue)}
+            variant="contained"
+          >
+            查看网页效果
+          </Button>
+        </Dialog>
+      </main>
+    </div>
   )
 }
