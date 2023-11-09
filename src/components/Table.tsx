@@ -36,7 +36,10 @@ const Table: FC<Props> = ({ rows, rowClick }) => {
   return (
     <DataGrid
       columns={columns}
+      disableColumnFilter
+      disableColumnMenu
       disableColumnSelector
+      disableDensitySelector
       disableRowSelectionOnClick
       initialState={{
         pagination: {

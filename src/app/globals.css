@@ -18,5 +18,9 @@ header {
 }
 
 .MuiSlider-thumb {
-  z-index: 9999;
+  z-index: 999;
+}
+
+.MuiDataGrid-virtualScroller {
+  min-height: 300px;
 }
