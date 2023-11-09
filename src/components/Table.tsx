@@ -6,25 +6,24 @@ const columns: GridColDef[] = [
   {
     field: 'name',
     headerName: '图片名称',
-    flex: 1,
+    flex: 2,
   },
   {
     field: 'size',
     headerName: '原始大小',
-    width: 360,
+    flex: 1,
   },
   {
     field: 'zipedSize',
     headerName: '压缩大小',
-    type: 'number',
-    width: 360,
+    flex: 1,
     headerAlign: 'left',
     align: 'left',
   },
   {
     field: 'rate',
     headerName: '减少',
-    width: 360,
+    flex: 1,
   },
 ]
 
@@ -49,7 +48,8 @@ const Table: FC<Props> = ({ rows, rowClick }) => {
       onRowClick={rowClick}
       rows={rows}
       sx={{
-        my: 2,
+        mb: 2,
+        mt: 1,
       }}
     />
   )

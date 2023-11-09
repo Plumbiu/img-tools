@@ -16,3 +16,7 @@ header {
   cursor: pointer;
   box-shadow: 0px 2px 6px -1px rgba(0, 0, 0, 0.15);
 }
+
+.MuiSlider-thumb {
+  z-index: 9999;
+}

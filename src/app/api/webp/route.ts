@@ -7,7 +7,6 @@ export async function POST(req: Request) {
   if (Number.isNaN(quality)) {
     quality = 80
   }
-
   let tool = sharp(raw).webp({
     quality,
   })

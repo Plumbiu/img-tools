@@ -1,7 +1,15 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { Button, Stack } from '@mui/material'
+import {
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListSubheader,
+  Slider,
+  Stack,
+} from '@mui/material'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 import { GridRowParams } from '@mui/x-data-grid'
@@ -35,6 +43,7 @@ export default function Home() {
   const [toastOpen, setToastOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedValue, setSelectedValue] = useState<[string, string]>()
+  const [quality, setQuality] = useState(80)
 
   function download() {
     try {
@@ -58,7 +67,9 @@ export default function Home() {
     for (const file of files) {
       const arrBuf = await file.arrayBuffer()
       const size = file.size
-      const { zipedBuffer, zipedSize } = await transWebp(arrBuf)
+      const { zipedBuffer, zipedSize } = await transWebp(arrBuf, {
+        quality,
+      })
       const name = removeSuffix(file.name)
       ziped.push({
         id: idx++,
@@ -91,6 +102,37 @@ export default function Home() {
     <div>
       <Header />
       <main>
+        <List
+          subheader={<ListSubheader>压缩设置</ListSubheader>}
+          sx={{
+            width: '100%',
+            maxWidth: '500px',
+            bgcolor: 'background.paper',
+            border: '1px solid rgba(0 ,0, 0, 0.15)',
+            borderRadius: '4px',
+          }}
+        >
+          <ListItem>
+            <ListItemText>质量</ListItemText>
+            <ListItemText primary={quality} />
+            <Slider
+              aria-label="Default"
+              defaultValue={80}
+              max={100}
+              min={0}
+              onChange={(_e, val) => {
+                if (!Array.isArray(val)) {
+                  setQuality(val)
+                }
+              }}
+              sx={{
+                maxWidth: '350px',
+              }}
+              value={quality}
+              valueLabelDisplay="auto"
+            />
+          </ListItem>
+        </List>
         <Table rowClick={handleRowClick} rows={webpFile} />
         <Stack
           direction="row"
