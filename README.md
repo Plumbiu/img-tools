@@ -6,7 +6,7 @@
 
 ## 转换为 webp
 
-> https://img-tools.plumbiu.top/api/webp
+> `Post`: https://img-tools.plumbiu.top/api/webp
 
 **请求参数：**
 
