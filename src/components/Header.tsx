@@ -9,7 +9,7 @@ const Header: FC<Props> = ({}) => {
     <header>
       <Button
         component="a"
-        href="https://github.plumbiu.top"
+        href="https://github.com/Plumbiu/img-tools#readme"
         startIcon={<GithubIcon />}
         target="_blank"
       >

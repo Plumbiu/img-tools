@@ -10,8 +10,8 @@ export async function POST(req: Request) {
   let tool = sharp(raw).webp({
     quality,
   })
-  const width = Number(searchParams.get('quality'))
-  const height = Number(searchParams.get('quality'))
+  const width = Number(searchParams.get('width'))
+  const height = Number(searchParams.get('height'))
   if (width && height) {
     tool = tool.resize({
       width,

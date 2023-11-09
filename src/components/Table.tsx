@@ -2,7 +2,7 @@ import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 import type { FC } from 'react'
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: '序号', width: 180 },
+  { field: 'id', headerName: '序号' },
   {
     field: 'name',
     headerName: '图片名称',
