@@ -14,11 +14,12 @@ import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 import { GridRowParams } from '@mui/x-data-grid'
 import {
-  base64MediaUrl,
   transWebp,
   openImgPreivew,
   removeSuffix,
   arrayBuffer2Base64,
+  buffer2Base64,
+  buffer2Base64Url,
 } from '@/lib'
 import Dialog from '@/components/Dialog'
 import Header from '@/components/Header'
@@ -64,18 +65,18 @@ export default function Home() {
         quality,
       })
       const name = removeSuffix(file.name)
-      const base64 = arrayBuffer2Base64(arrBuf)
-      const zipedBase64 = arrayBuffer2Base64(zipedBuffer)
       ziped.push({
         id: idx++,
         name,
-        base64,
-        zipedBase64,
+        buffer: Buffer.from(arrBuf),
+        zipedBuffer,
         size: size + 'kb',
         zipedSize: zipedSize + 'kb',
         rate: size - zipedSize + 'kb',
       })
-      zip.file(`${name}.webp`, zipedBase64, { base64: true })
+      zip.file(`${name}.webp`, buffer2Base64(zipedBuffer), {
+        base64: true,
+      })
     }
     setWebpFile(ziped)
     setLoading(false)
@@ -88,8 +89,8 @@ export default function Home() {
   function handleRowClick(params: GridRowParams<WebpFile>) {
     const { row } = params
     setSelectedValue([
-      base64MediaUrl(row.base64),
-      base64MediaUrl(row.zipedBase64),
+      buffer2Base64Url(row.buffer),
+      buffer2Base64Url(row.zipedBuffer),
     ])
     setDialogOpen(true)
   }

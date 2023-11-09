@@ -1,8 +1,8 @@
 interface WebpFile {
   id: number
   name: string
-  base64: string
-  zipedBase64: string
+  buffer: Buffer
+  zipedBuffer: Buffer
   size: string
   zipedSize?: string
   rate?: string

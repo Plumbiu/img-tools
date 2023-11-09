@@ -50,8 +50,8 @@ export function removeSuffix(name: string) {
   return name.slice(0, name.lastIndexOf('.'))
 }
 
-export function base64MediaUrl(str: string) {
-  return 'data:image/png;base64,' + str
+export function buffer2Base64Url(buffer: Buffer) {
+  return 'data:image/png;base64,' + buffer2Base64(buffer)
 }
 
 function openWin(originHTML: string, zipedHTML: string) {
