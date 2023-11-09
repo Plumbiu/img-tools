@@ -29,17 +29,7 @@ const zip = new JSZip()
 
 export default function Home() {
   const iptRef = useRef<HTMLInputElement>(null)
-  const [webpFile, setWebpFile] = useState<WebpFile[]>([
-    {
-      id: 1,
-      name: '传入图片的名字',
-      buffer: Buffer.from('0011'),
-      zipedBuffer: Buffer.from('01'),
-      size: '800kb = 初始大小',
-      zipedSize: '400kb = 压缩为 webp 格式的图片大小',
-      rate: '50% = 压缩大小/原始大小',
-    },
-  ])
+  const [webpFile, setWebpFile] = useState<WebpFile[]>([])
   const [toastOpen, setToastOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedValue, setSelectedValue] = useState<[string, string]>()
@@ -83,7 +73,6 @@ export default function Home() {
       zip.file(`${name}.webp`, buffer2Base64(zipedBuffer), { base64: true })
     }
     setWebpFile(ziped)
-    console.log({ ziped })
   }
 
   function handleClose() {
