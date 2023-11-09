@@ -82,6 +82,6 @@ export function openImgPreivew(base64Url: [string, string] | undefined) {
   const originImg = new Image()
   const zipedImg = new Image()
   originImg.src = base64Url[0]
-  zipedImg.src = base64Url[0]
+  zipedImg.src = base64Url[1]
   openWin(originImg.outerHTML, zipedImg.outerHTML)
 }
