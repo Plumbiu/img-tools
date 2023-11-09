@@ -1,3 +1,7 @@
+import { RequestInit } from './request'
+
+const request = RequestInit('/api')
+
 export function buffer2Base64(buffer: Buffer) {
   var binary = ''
   var bytes = new Uint8Array(buffer)
@@ -11,15 +15,30 @@ export function arrayBuffer2Base64(arrayBuffer: ArrayBuffer) {
   return window.btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
 }
 
-export async function getData(arrBuf: ArrayBuffer, quality = 75) {
-  const rawJSON = await fetch(`/api?quality=${quality}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+interface TransOptions {
+  quality?: number
+  width?: number
+  height?: number
+}
+
+interface WebpRequest {
+  buffer: {
+    type: 'Buffer'
+    data: Buffer
+  }
+  size: number
+}
+
+export async function transWebp(
+  arrBuf: ArrayBuffer,
+  options: TransOptions = {
+    quality: 80,
+  },
+) {
+  const { buffer, size } = await request.post<WebpRequest>('/webp', {
     body: arrBuf,
+    params: { ...options },
   })
-  const { buffer, size } = await rawJSON.json()
 
   return {
     zipedBuffer: buffer.data,

@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '在线转换 webp 图片',
-  description: '将图片转换为 webp',
+  title: 'Img Tools',
+  description: '图片转换工具',
 }
 
 export default function RootLayout({

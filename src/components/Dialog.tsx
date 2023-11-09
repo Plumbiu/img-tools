@@ -1,20 +1,24 @@
-import {
-  Dialog as MuiDialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-} from '@mui/material'
+import { Dialog as MuiDialog, DialogTitle, Button, Stack } from '@mui/material'
 
 import type { FC, ReactNode } from 'react'
 
 interface Prop {
   open: boolean
-  children: ReactNode
   title: string
+  children: ReactNode
   onClose: () => void
+  ziped: string | undefined
+  origin: string | undefined
 }
 
-const Dialog: FC<Prop> = ({ onClose, children, open, title }) => {
+const Dialog: FC<Prop> = ({
+  onClose,
+  ziped,
+  origin,
+  open,
+  title,
+  children,
+}) => {
   const handleClose = () => {
     onClose()
   }
@@ -22,6 +26,15 @@ const Dialog: FC<Prop> = ({ onClose, children, open, title }) => {
   return (
     <MuiDialog maxWidth={false} onClose={handleClose} open={open}>
       <DialogTitle>{title}</DialogTitle>
+      <Stack direction="row" spacing={2}>
+        <img
+          alt="origin img"
+          className="preview-img"
+          height="400"
+          src={origin}
+        />
+        <img alt="ziped img" className="preview-img" height="400" src={ziped} />
+      </Stack>
       {children}
     </MuiDialog>
   )

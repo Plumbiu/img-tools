@@ -5,13 +5,21 @@ export async function POST(req: Request) {
   const { searchParams } = new URL(req.url)
   let quality = Number(searchParams.get('quality'))
   if (Number.isNaN(quality)) {
-    quality = 75
+    quality = 80
   }
-  const buffer = await sharp(raw)
-    .webp({
-      quality,
+
+  let tool = sharp(raw).webp({
+    quality,
+  })
+  const width = Number(searchParams.get('quality'))
+  const height = Number(searchParams.get('quality'))
+  if (width && height) {
+    tool = tool.resize({
+      width,
+      height,
     })
-    .toBuffer()
+  }
+  const buffer = await tool.toBuffer()
   return Response.json({
     buffer,
     size: (buffer.byteLength / 1024).toFixed(2),

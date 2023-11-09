@@ -1,46 +1,21 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { Alert, Button, Snackbar, Stack } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
-import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
+import { GridRowParams } from '@mui/x-data-grid'
 import {
   buffer2Base64,
   buffer2Base64Url,
-  getData,
+  transWebp,
   openImgPreivew,
   removeSuffix,
 } from '@/lib'
 import Dialog from '@/components/Dialog'
-import { GithubIcon } from '@/components/icons'
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: '序号', width: 180 },
-  {
-    field: 'name',
-    headerName: '图片名称',
-    flex: 1,
-  },
-  {
-    field: 'size',
-    headerName: '原始大小',
-    width: 360,
-  },
-  {
-    field: 'zipedSize',
-    headerName: '压缩大小',
-    type: 'number',
-    width: 360,
-    headerAlign: 'left',
-    align: 'left',
-  },
-  {
-    field: 'rate',
-    headerName: '减少比',
-    width: 360,
-  },
-]
+import Header from '@/components/Header'
+import Toast from '@/components/Toast'
+import Table from '@/components/Table'
 
 const zip = new JSZip()
 
@@ -83,7 +58,7 @@ export default function Home() {
     for (const file of files) {
       const arrBuf = await file.arrayBuffer()
       const size = file.size
-      const { zipedBuffer, zipedSize } = await getData(arrBuf)
+      const { zipedBuffer, zipedSize } = await transWebp(arrBuf)
       const name = removeSuffix(file.name)
       ziped.push({
         id: idx++,
@@ -92,7 +67,7 @@ export default function Home() {
         zipedBuffer,
         size: size + 'kb',
         zipedSize: zipedSize + 'kb',
-        rate: ((zipedSize / size) * 100).toFixed(2) + '%',
+        rate: size - zipedSize + 'kb',
       })
       zip.file(`${name}.webp`, buffer2Base64(zipedBuffer), { base64: true })
     }
@@ -114,34 +89,9 @@ export default function Home() {
   }
   return (
     <div>
-      <header>
-        <Button
-          component="a"
-          href="https://github.plumbiu.top"
-          startIcon={<GithubIcon />}
-          target="_blank"
-        >
-          API 使用
-        </Button>
-      </header>
+      <Header />
       <main>
-        <DataGrid
-          columns={columns}
-          disableColumnSelector
-          disableRowSelectionOnClick
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          onRowClick={handleRowClick}
-          rows={webpFile}
-          sx={{
-            my: 2,
-          }}
-        />
+        <Table rowClick={handleRowClick} rows={webpFile} />
         <Stack
           direction="row"
           spacing={2}
@@ -168,37 +118,14 @@ export default function Home() {
             点击下载
           </Button>
         </Stack>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-          autoHideDuration={6000}
-          open={toastOpen}
-        >
-          <Alert severity="success" sx={{ width: '100%' }} variant="filled">
-            压缩成功
-          </Alert>
-        </Snackbar>
+        <Toast open={toastOpen} />
         <Dialog
           onClose={handleClose}
           open={dialogOpen}
+          origin={selectedValue?.[0]}
           title="压缩前后对比(左边为原始图片)"
+          ziped={selectedValue?.[1]}
         >
-          <Stack direction="row" spacing={2}>
-            <img
-              alt="ziped img"
-              className="preview-img"
-              height="400"
-              src={selectedValue?.[1]}
-            />
-            <img
-              alt="origin img"
-              className="preview-img"
-              height="400"
-              src={selectedValue?.[0]}
-            />
-          </Stack>
           <Button
             onClick={() => openImgPreivew(selectedValue)}
             variant="contained"
