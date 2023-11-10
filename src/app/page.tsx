@@ -63,7 +63,7 @@ export default function Home() {
     let idx = ziped.length + 1
     for (const file of files) {
       const arrBuf = await file.arrayBuffer()
-      const size = file.size
+      const size = +(file.size / 1024).toFixed(2) // kb
       const { zipedBuffer, zipedSize } = await transWebp(arrBuf, {
         quality,
       })
