@@ -58,8 +58,6 @@ export default function Home() {
       return
     }
     const ziped: WebpFile[] = [...webpFile]
-    console.log({ ziped })
-
     let idx = ziped.length + 1
     for (const file of files) {
       const arrBuf = await file.arrayBuffer()

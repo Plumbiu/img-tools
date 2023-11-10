@@ -87,7 +87,5 @@ export function openImgPreivew(base64Url: [string, string] | undefined) {
 }
 
 export function formatSize(size: number) {
-  console.log({ size })
-
   return size > 1024 ? `${(size / 1024).toFixed(2)}mb` : `${size}kb`
 }
