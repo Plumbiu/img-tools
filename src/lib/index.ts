@@ -5,7 +5,7 @@ const request = RequestInit('/api')
 export function buffer2Base64(buffer: Buffer) {
   let binary = ''
   const bytes = new Uint8Array(buffer)
-  for (var len = bytes.byteLength, i = 0; i < len; i++) {
+  for (let len = bytes.byteLength, i = 0; i < len; i++) {
     binary += String.fromCharCode(bytes[i])
   }
   return window.btoa(binary)
