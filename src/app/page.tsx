@@ -24,7 +24,6 @@ import {
 } from '@/lib'
 import Dialog from '@/components/Dialog'
 import Header from '@/components/Header'
-import Toast from '@/components/Toast'
 import Table from '@/components/Table'
 import Loading from '@/components/Loading'
 
@@ -33,7 +32,6 @@ const zip = new JSZip()
 export default function Home() {
   const iptRef = useRef<HTMLInputElement>(null)
   const [webpFile, setWebpFile] = useState<WebpFile[]>([])
-  const [toastOpen, setToastOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedValue, setSelectedValue] = useState<[string, string]>()
   const [quality, setQuality] = useState(80)
@@ -46,8 +44,6 @@ export default function Home() {
       })
     } catch {
       // noop
-    } finally {
-      setToastOpen(true)
     }
   }
 
@@ -163,7 +159,6 @@ export default function Home() {
           ref={iptRef}
           type="file"
         />
-        <Toast open={toastOpen} />
         <Dialog
           onClose={handleClose}
           open={dialogOpen}
