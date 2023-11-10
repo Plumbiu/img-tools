@@ -41,13 +41,7 @@ const Table: FC<Props> = ({ rows, rowClick }) => {
       disableColumnSelector
       disableDensitySelector
       disableRowSelectionOnClick
-      initialState={{
-        pagination: {
-          paginationModel: {
-            pageSize: 10,
-          },
-        },
-      }}
+      editMode="row"
       onRowClick={rowClick}
       rows={rows}
       sx={{

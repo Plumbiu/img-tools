@@ -85,3 +85,7 @@ export function openImgPreivew(base64Url: [string, string] | undefined) {
   zipedImg.src = base64Url[1]
   openWin(originImg.outerHTML, zipedImg.outerHTML)
 }
+
+export function formatSize(size: number) {
+  return size > 1024 ? `${(size / 1024).toFixed(2)}mb` : `${size}kb`
+}

@@ -20,6 +20,7 @@ import {
   arrayBuffer2Base64,
   buffer2Base64,
   buffer2Base64Url,
+  formatSize,
 } from '@/lib'
 import Dialog from '@/components/Dialog'
 import Header from '@/components/Header'
@@ -56,8 +57,10 @@ export default function Home() {
     if (!files) {
       return
     }
-    const ziped: WebpFile[] = []
-    let idx = 1
+    const ziped: WebpFile[] = [...webpFile]
+    console.log({ ziped })
+
+    let idx = ziped.length + 1
     for (const file of files) {
       const arrBuf = await file.arrayBuffer()
       const size = file.size
@@ -70,9 +73,9 @@ export default function Home() {
         name,
         buffer: Buffer.from(arrBuf),
         zipedBuffer,
-        size: size + 'kb',
+        size: formatSize(size),
         zipedSize: zipedSize + 'kb',
-        rate: size - zipedSize + 'kb',
+        rate: formatSize(size - zipedSize),
       })
       zip.file(`${name}.webp`, buffer2Base64(zipedBuffer), {
         base64: true,
@@ -106,6 +109,7 @@ export default function Home() {
             bgcolor: 'background.paper',
             border: '1px solid rgba(0 ,0, 0, 0.15)',
             borderRadius: '4px',
+            my: 1,
           }}
         >
           <ListItem>
@@ -129,7 +133,6 @@ export default function Home() {
             />
           </ListItem>
         </List>
-        <Table rowClick={handleRowClick} rows={webpFile} />
         <Stack
           direction="row"
           spacing={2}
@@ -138,16 +141,11 @@ export default function Home() {
           }}
         >
           <Button onClick={() => iptRef.current?.click()} variant="contained">
-            选择文件
+            添加文件
           </Button>
-          <input
-            accept="image/*"
-            hidden
-            multiple
-            onChange={showImg}
-            ref={iptRef}
-            type="file"
-          />
+          <Button onClick={() => setWebpFile([])} variant="outlined">
+            清空
+          </Button>
           <Button
             disabled={webpFile.length <= 0}
             onClick={() => download()}
@@ -156,9 +154,18 @@ export default function Home() {
             点击下载
           </Button>
         </Stack>
-        <Toast open={toastOpen} />
+        <Table rowClick={handleRowClick} rows={webpFile} />
       </main>
       <div>
+        <input
+          accept="image/*"
+          hidden
+          multiple
+          onChange={showImg}
+          ref={iptRef}
+          type="file"
+        />
+        <Toast open={toastOpen} />
         <Dialog
           onClose={handleClose}
           open={dialogOpen}
